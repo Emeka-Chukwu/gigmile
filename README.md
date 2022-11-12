@@ -3,14 +3,6 @@
 
 
 
-## Architecture
-
-This project using `Clean Architecture` with 4 domain layers:
-
-- Model
-- Data (repository)
-- Handler
-
 ## How to run this project
 
 ## System Requirements
