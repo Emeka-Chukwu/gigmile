@@ -8,8 +8,7 @@
 This project using `Clean Architecture` with 4 domain layers:
 
 - Model
-- Repository
-- Service
+- Data (repository)
 - Handler
 
 ## How to run this project
@@ -25,7 +24,7 @@ This project using `Clean Architecture` with 4 domain layers:
 Setting up all containers
 
 ```console
-$ make build_up
+$ make up_build
 ```
 
 or 
