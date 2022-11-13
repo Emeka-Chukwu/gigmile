@@ -7,6 +7,7 @@ import (
 	"gigmile-task/config"
 	"gigmile-task/data"
 	_ "gigmile-task/data"
+	"gigmile-task/validator"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,10 +29,26 @@ type jsonResponse struct {
 func (model *HandlerModel) CreateCountry(w http.ResponseWriter, r *http.Request) {
 	config.Setheaders(w)
 	var request data.Country
-	_ = json.NewDecoder(r.Body).Decode(&request)
+
 	app := config.Config{}
+	err := json.NewDecoder(r.Body).Decode(&request)
+	payLoad := jsonResponse{Success: false, Message: "Error parsing the entity", Data: err}
+	if err != nil {
+		app.WriteJSON(w, http.StatusBadRequest, payLoad)
+		return
+	}
+	validate := validator.New()
+	validate.Check(len(request.Name) > 1, "name", "must be atleast 2 characters")
+	validate.Check(len(request.Continent) > 1, "continent", "must be atleast 2 characters")
+	validate.Check(len(request.ShortName) > 1, "shortname", "must be atleast 2 characters")
+
+	if !validate.Valid() {
+		validate.FailedValidation(w, r)
+		return
+	}
+
 	country, err := request.GetCountry(strings.ToLower(request.Name), strings.ToLower(request.ShortName))
-	payLoad := jsonResponse{Success: false, Message: "Country already exist", Data: country}
+	payLoad = jsonResponse{Success: false, Message: "Country already exist", Data: country}
 	if err == nil {
 		app.WriteJSON(w, http.StatusBadRequest, payLoad)
 		return
