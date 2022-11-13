@@ -24,6 +24,12 @@ down:
 	docker-compose down
 	@echo "Done!"
 
+
+migrationup:
+	migrate -path db/migration -database "postgresql://postgres:password@localhost:5432/countries?sslmode=disable" -verbose up
+migrationdown:
+	migrate -path db/migration -database "postgresql://postgres:password@localhost:5432/countries?sslmode=disable" -verbose down
+
 ## build_taskApp: builds the taskApp binary as a linux executable
 build_taskApp:
 	@echo "Building broker binary..."
