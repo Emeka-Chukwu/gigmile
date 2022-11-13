@@ -41,13 +41,13 @@ Migrating sql file into db
 
 ```console
 $ make migrationup
-``
+```
 
 Dropping tables 
 
 ```console
 $ make migrationdown
-``
+```
 Note: Run migration when docker is running
 
 ## Endpoints
