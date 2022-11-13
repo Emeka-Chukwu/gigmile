@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
-	"log"
 	"strings"
 	"time"
 )
@@ -44,8 +42,6 @@ func (c *Country) GetAll() ([]*Country, error) {
 	from countries order by created_at desc`
 
 	rows, err := db.QueryContext(ctx, query)
-	fmt.Println(err)
-
 	if err != nil {
 
 		return []*Country{}, err
@@ -66,7 +62,6 @@ func (c *Country) GetAll() ([]*Country, error) {
 			&country.Updated_At,
 		)
 		if err != nil {
-			log.Println("Error scanning", err)
 			return []*Country{}, err
 		}
 
@@ -114,7 +109,6 @@ func (c *Country) GetCountry(name, short string) (*Country, error) {
 
 	var country Country
 	row := db.QueryRowContext(ctx, query, name, short)
-	fmt.Println(row, query)
 	err := row.Scan(
 		&country.ID,
 		&country.Name,
@@ -125,7 +119,6 @@ func (c *Country) GetCountry(name, short string) (*Country, error) {
 		&country.Updated_At,
 	)
 
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}

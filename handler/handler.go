@@ -96,7 +96,7 @@ func (model *HandlerModel) GetCountryById(w http.ResponseWriter, r *http.Request
 	var request data.Country
 	resp, err := request.GetOne(docId)
 	if err != nil {
-		app.ErrorJSON(w, errors.New("record not found"), http.StatusBadRequest)
+		app.ErrorJSON(w, errors.New("record not found"), http.StatusNotFound)
 		return
 	}
 	payLoad := jsonResponse{Success: true, Message: "Fetched countries successfully", Data: resp}
@@ -117,11 +117,25 @@ func (model *HandlerModel) UpdateCountry(w http.ResponseWriter, r *http.Request)
 
 	}
 	var request data.Country
-	_ = json.NewDecoder(r.Body).Decode(&request)
+	err = json.NewDecoder(r.Body).Decode(&request)
+	payLoad := jsonResponse{Success: false, Message: "Error parsing the entity", Data: err}
+	if err != nil {
+		app.WriteJSON(w, http.StatusBadRequest, payLoad)
+		return
+	}
+	validate := validator.New()
+	validate.Check(len(request.Name) > 1, "name", "must be atleast 2 characters")
+	validate.Check(len(request.Continent) > 1, "continent", "must be atleast 2 characters")
+	validate.Check(len(request.ShortName) > 1, "shortname", "must be atleast 2 characters")
+
+	if !validate.Valid() {
+		validate.FailedValidation(w, r)
+		return
+	}
 
 	foundCountry, err := request.GetOne(docId)
 	if err != nil {
-		app.ErrorJSON(w, errors.New("record not found"), http.StatusBadRequest)
+		app.ErrorJSON(w, errors.New("record not found"), http.StatusNotFound)
 		return
 	}
 	// if &foundCountry.ID != &request.ID {
@@ -139,7 +153,7 @@ func (model *HandlerModel) UpdateCountry(w http.ResponseWriter, r *http.Request)
 		app.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
-	payLoad := jsonResponse{Success: true, Message: "Country updated successfully", Data: foundCountry}
+	payLoad = jsonResponse{Success: true, Message: "Country updated successfully", Data: foundCountry}
 	app.WriteJSON(w, http.StatusOK, payLoad)
 }
 
@@ -160,7 +174,7 @@ func (model *HandlerModel) DeleteCountryById(w http.ResponseWriter, r *http.Requ
 	var request data.Country
 	err = request.DeleteByID(docId)
 	if err != nil {
-		app.ErrorJSON(w, errors.New("record not found"), http.StatusInternalServerError)
+		app.ErrorJSON(w, errors.New("record not found"), http.StatusNotFound)
 		return
 	}
 	payLoad := jsonResponse{Success: true, Message: "Country deleted successfully", Data: nil}

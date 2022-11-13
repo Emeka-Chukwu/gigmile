@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"gigmile-task/data"
 	"gigmile-task/handler"
 	"net/http"
@@ -39,8 +38,6 @@ func TestCountryCreate(t *testing.T) {
 			client := &http.Client{}
 			resp, err := client.Do(req)
 			assert.Equal(t, nil, err)
-			fmt.Println(resp.Body)
-			// assert.Equal(t, countries[0].Name, res)
 			assert.Equal(t, http.StatusOK, resp.StatusCode)
 		}
 		for _, country := range countries {
@@ -52,8 +49,6 @@ func TestCountryCreate(t *testing.T) {
 			client := &http.Client{}
 			resp, err := client.Do(req)
 			assert.Equal(t, nil, err)
-			fmt.Println(resp.Body)
-			// assert.Equal(t, countries[0].Name, res)
 			assert.Equal(t, http.StatusBadRequest, resp.StatusCode)
 		}
 	})
@@ -69,7 +64,6 @@ func TestCountryReadAll(t *testing.T) {
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		assert.Equal(t, nil, err)
-		fmt.Println(resp.Body)
 		// assert.Equal(t, countries[0].Name, res)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
@@ -86,8 +80,6 @@ func TestCountryReadOne(t *testing.T) {
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		assert.Equal(t, nil, err)
-		fmt.Println(resp.Body)
-		// assert.Equal(t, countries[0].Name, res)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 
 	})
