@@ -10,6 +10,7 @@
 - Golang
 - Docker
 - Postgres (included in docker compose)
+- Migrations
 
 ## Running
 
@@ -32,6 +33,22 @@ Destroy running containers
 ```console
 $ make down
 ```
+
+
+## Migration
+
+Migrating sql file into db
+
+```console
+$ make migrationup
+``
+
+Dropping tables 
+
+```console
+$ make migrationdown
+``
+Note: Run migration when docker is running
 
 ## Endpoints
 
